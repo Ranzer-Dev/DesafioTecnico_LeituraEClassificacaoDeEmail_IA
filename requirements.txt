@@ -1,0 +1,13 @@
+Flask
+nltk
+pdfplumber
+joblib
+transformers
+torch
+tf-keras
+tiktoken
+blobfile
+sentencepiece
+python-docx
+PyPDF2
+jsonify

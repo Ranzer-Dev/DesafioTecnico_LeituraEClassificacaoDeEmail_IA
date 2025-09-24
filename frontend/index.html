@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Classificação de Emails</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        textarea { width: 100%; height: 150px; }
+        input[type="file"] { margin-top: 10px; }
+        button { margin-top: 10px; padding: 10px 20px; }
+        .resultado { margin-top: 20px; padding: 10px; border: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+    <h1>Classificação de Emails</h1>
+    <form method="POST" enctype="multipart/form-data">
+        <label for="email_text">Digite o email:</label><br>
+        <textarea name="email_text">{{ email_text }}</textarea><br>
+        
+        <label for="email_file">Ou faça upload de um arquivo (.txt):</label><br>
+        <input type="file" name="email_file"><br>
+
+        <button type="submit">Classificar</button>
+    </form>
+
+    {% if category %}
+    <div class="resultado">
+        <p><strong>Categoria:</strong> {{ category }}</p>
+        <p><strong>Resposta sugerida:</strong> {{ response }}</p>
+    </div>
+    {% endif %}
+</body>
+</html>
