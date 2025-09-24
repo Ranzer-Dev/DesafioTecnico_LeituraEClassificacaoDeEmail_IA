@@ -1,60 +1,52 @@
-# utils.py
-import re
-import nltk
+import re, nltk, json, os
 from transformers import pipeline
 
-# Baixar stopwords portuguesas
 nltk.download('stopwords')
 stop_words = set(nltk.corpus.stopwords.words('portuguese'))
 
-# Palavras-chave para reforço
-produtivo_keywords = ["suporte", "atualize", "urgente"]
-improdutivo_keywords = ["feliz natal", "obrigado", "saudações"]
+KEYWORDS_FILE = os.path.join(os.path.dirname(__file__), "keywords.json")
 
-# Pipeline de classificação leve (gratuito)
+def load_keywords():
+    if os.path.exists(KEYWORDS_FILE):
+        with open(KEYWORDS_FILE, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        return data.get("produtivo", []), data.get("improdutivo", [])
+    # valores padrão
+    return ["suporte", "atualize", "urgente"], ["feliz natal", "obrigado", "saudações"]
+
+def save_keywords(produtivo_list, improdutivo_list):
+    with open(KEYWORDS_FILE, "w", encoding="utf-8") as f:
+        json.dump({
+            "produtivo": produtivo_list,
+            "improdutivo": improdutivo_list
+        }, f, ensure_ascii=False, indent=4)
+
 classifier = pipeline(
     "sentiment-analysis",
     model="neuralmind/bert-base-portuguese-cased",
-    device=-1  # CPU
+    device=-1
 )
 
 def preprocess(text):
-    """Limpa e normaliza o texto."""
     text = re.sub(r'[^a-zA-ZÀ-ÿ ]', ' ', text)
     words = [w.lower() for w in text.split() if w.lower() not in stop_words]
     return ' '.join(words)
 
 def classify_email(text):
-    """
-    Classifica o e-mail como Produtivo ou Improdutivo.
-    Prioriza palavras-chave de produtividade.
-    """
-    text_lower = text.lower()
-    
-    # Se houver qualquer palavra-chave produtiva, considera produtivo
-    if any(word in text_lower for word in produtivo_keywords):
+    produtivo_keywords, improdutivo_keywords = load_keywords()
+    lower = text.lower()
+    if any(w in lower for w in produtivo_keywords):
         return "Produtivo"
-    
-    # Se houver palavras improdutivas, mas nenhuma produtiva
-    if any(word in text_lower for word in improdutivo_keywords):
+    if any(w in lower for w in improdutivo_keywords):
         return "Improdutivo"
-    
-    # Se nenhuma palavra-chave, usa modelo BERT
-    preprocessed = preprocess(text)
-    result = classifier(preprocessed)[0]
-    
-    if "positivo" in result['label'].lower():
-        return "Produtivo"
-    return "Improdutivo"
+    result = classifier(preprocess(text))[0]
+    return "Produtivo" if "positivo" in result['label'].lower() else "Improdutivo"
 
 def generate_response(category, original_text):
-    """Gera resposta automática baseada na classificação."""
-    if category == "Produtivo":
-        return f"Recebemos seu email: Em breve retornaremos com mais informações."
-    return f"Obrigado pelo seu contato! Agradecemos sua mensagem."
+    return ("Recebemos seu email: Em breve retornaremos com mais informações."
+            if category == "Produtivo"
+            else "Obrigado pelo seu contato! Agradecemos sua mensagem.")
 
 def classify_and_respond(text):
-    """Função única para classificar e gerar resposta."""
-    category = classify_email(text)
-    response = generate_response(category, text)
-    return category, response
+    cat = classify_email(text)
+    return cat, generate_response(cat, text)

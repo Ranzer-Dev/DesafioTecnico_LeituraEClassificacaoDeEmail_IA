@@ -1,4 +1,10 @@
 {
-  "produtivo": ["suporte", "atualize", "urgente"],
-  "improdutivo": ["feliz natal", "obrigado", "saudações"]
+    "produtivo": [
+        "força"
+    ],
+    "improdutivo": [
+        "feliz natal",
+        "obrigado",
+        "saudações"
+    ]
 }
