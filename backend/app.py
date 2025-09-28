@@ -1,5 +1,6 @@
-from flask import Flask, request, render_template, jsonify
-from utils import classify_and_respond, load_keywords, save_keywords
+from flask import Flask, request, render_template
+from utils import gerar_resposta_complexa
+
 import os
 from PyPDF2 import PdfReader
 from docx import Document
@@ -28,21 +29,9 @@ def index():
             file.save(fname)
             email_text = extract_text_from_file(fname)
         if email_text:
-            category, response = classify_and_respond(email_text)
-    return render_template("index.html",
-                           email_text=email_text,
-                           category=category,
-                           response=response)
-
-@app.route("/keywords", methods=["GET", "POST"])
-def keywords():
-    if request.method == "POST":
-        prod = [p.strip() for p in request.form.get("produtivo","").split(",") if p.strip()]
-        impr = [i.strip() for i in request.form.get("improdutivo","").split(",") if i.strip()]
-        save_keywords(prod, impr)
-        return jsonify({"status": "ok"})
-    prod, impr = load_keywords()
-    return jsonify({"produtivo": prod, "improdutivo": impr})
+            response = gerar_resposta_complexa(email_text)
+            category = "Produtivo" if "PRODUTIVO" in response.upper() else "Improdutivo"
+    return render_template("index.html", email_text=email_text, category=category, response=response)
 
 if __name__ == "__main__":
     app.run(debug=True)

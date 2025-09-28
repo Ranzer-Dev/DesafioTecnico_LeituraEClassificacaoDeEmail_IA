@@ -1,0 +1,98 @@
+/* ===== Container principal ===== */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f5f7fa;
+  color: #2c3e50;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.container h1{
+  text-align: center;
+  color: #34495e;
+  margin-bottom: 30px;
+}
+
+.container button {
+  display: block;
+  margin:40px auto 10px auto;
+  padding: 12px 30px;
+  background-color: #27ae60;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+} 
+
+/* ===== Formulário de email ===== */
+.email-form, .keywords-form {
+  background: #fff;
+  width: 100%;
+  padding: 25px 30px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  margin-bottom: 30px;
+}
+
+.email-form label, .keywords-form label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #34495e;
+}
+
+.email-form textarea {
+  width: 100%;
+  min-height: 140px;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #dcdcdc;
+  font-size: 14px;
+  resize: vertical;
+  margin-bottom: 15px;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.email-form textarea:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 8px rgba(52, 152, 219, 0.2);
+  outline: none;
+}
+
+.email-form input[type="file"] {
+  display: block;
+  margin: 10px 0 15px 0;
+}
+
+.email-form button, .keywords-form button {
+  padding: 10px 25px;
+  background-color: #3498db;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.email-form button:hover, .keywords-form button:hover {
+  background-color: #2980b9;
+  transform: translateY(-1px);
+}
+
+.resultado {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  border-left: 6px solid #3498db;
+}
